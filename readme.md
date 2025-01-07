@@ -12,6 +12,8 @@ Used for ASR6601 Keil project generate to a movable file
 
 suitable version: ASR6601_LoRaWAN 1.0.3 SDK
 
+> you can download this file by this :  [ASR_lora_6601](https://github.com/asrlora/asr_lora_6601)
+
 ## Usage 
 
 1、解压SDK文件，打开"projects"文件夹找到你要打开的文件
@@ -24,14 +26,7 @@ suitable version: ASR6601_LoRaWAN 1.0.3 SDK
 
 2.Copy the Genhelper.exe to the project file which you want to use, and put it with the "keil.bat" file,click it.
 
-## the file structure
 
-Briefly, you only should copy these file to your Project
-
-```
-./incs/
-./
-```
 
 
 
