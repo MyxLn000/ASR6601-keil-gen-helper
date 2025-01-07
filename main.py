@@ -39,3 +39,4 @@ if __name__ == '__main__':
     prpath=judge_pos()
     mgf.createProj(prpath)
     mgf.genKeilconf(prpath)
+    print("[main]Done\n")

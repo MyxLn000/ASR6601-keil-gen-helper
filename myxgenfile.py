@@ -4,6 +4,7 @@ import sys
 import re
 
 def createProj(pre_path):
+    print("[mgf]Create new project...\n")
     if not os.path.exists("./project"):
         os.makedirs("./project/incs")
     else:
@@ -26,8 +27,8 @@ def createProj(pre_path):
         shutil.copytree(pre_path + file, "./project/incs/"+file)
     shutil.copy('./keil.bat','./project/keil.bat')
 
-
 def genKeilconf(pre_path):
+    print('[mgf]rewrite the new file "keil_config.ini"...\n')
     keil_config_file_path = "./project/utils/keil_config.ini"
     try:
         pre_path = pre_path[:-2]
@@ -80,7 +81,6 @@ def genKeilconf(pre_path):
         # 将替换后的内容写回文件
         with open(keil_config_file_path, 'w') as file:
             file.write(st)
-
     except:
         print("can not open generate file in ./project/utils/keil_config.in")
         sys.exit(1)
