@@ -2,6 +2,40 @@ import os
 import shutil
 import sys
 import re
+import subprocess
+
+def judge_pos():
+    print("[mgf]checking sdk...\n")
+    if not os.path.exists("./keil.bat"):
+        print("Please put in project with keil.bat")
+        sys.exit(1)
+    prePath = ""
+    try:
+        with open('./keil.bat','r', encoding='utf-8') as k_file:
+            while True:
+                char = k_file.read(3)
+                if (char == '..\\'):
+                    prePath = prePath + "../"
+                else:
+                    break
+        prePath = prePath + './'
+        folders_check = [
+            "tools",
+            "projects",
+            "drivers",
+            "lora",
+            "platform"
+        ]
+        for folder in folders_check:
+            if not os.path.isdir(prePath+folder):
+                print(f"'{folder}' file not exit ")
+                sys.exit(1)
+            else:
+                continue
+        return prePath
+    except Exception as e:
+        print(f"读取文件时发生错误: {e}")
+
 
 def createProj(pre_path):
     print("[mgf]Create new project...\n")
@@ -24,6 +58,7 @@ def createProj(pre_path):
     for file in usedforincs:
         shutil.copytree(pre_path + file, "./project/"+file)
     shutil.copy('./keil.bat','./project/keil.bat')
+
 
 def rewriteKeilconf(pre_path):
     print('[mgf]rewrite the new file "keil_config.ini"...\n')
@@ -138,4 +173,52 @@ def rewritebat():# this function change the keil.bat and ./utils/genbinary.bat
 
     except:
         print("can not open generate file in ./project/utils/genbinary.bat")
+        sys.exit(1)
+
+def finishedgen():
+    print("[mgf]generate the keil project...\n")
+    bat_path = './project/keil.bat'
+    try:
+        subprocess.run(f"runas /user:Administrator '{bat_path}'", shell=True, check=True)
+        print(f"[mgf]{bat_path} done. project has been gen\n")
+
+    except subprocess.CalledProcessError as e:
+    # 运行失败时的处理
+        print(f"文件 {bat_path} 运行失败,请手动点击./project/keil.bat生成工程，返回码: {e.returncode}")
+        sys.exit(1)
+    except FileNotFoundError:
+        # 文件不存在时的处理
+        print(f"文件 {bat_path} 不存在.")
+        sys.exit(1)
+    except PermissionError:
+        # 没有权限运行文件时的处理
+        print(f"没有权限运行文件 {bat_path},请手动点击./project/keil.bat生成工程.")
+        sys.exit(1)
+    except Exception as e:
+        # 其他异常的处理
+        print(f"运行文件时发生错误: {e},请手动点击./project/keil.bat生成工程")
+        sys.exit(1)
+
+    try:
+        os.remove(bat_path)
+    except FileNotFoundError:
+        print(f"文件 {bat_path} 不存在.")
+    except PermissionError:
+        print(f"没有权限删除文件 {bat_path}.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"删除文件时发生错误: {e}")
+        sys.exit(1)
+
+    utils_path = './project/utils/'
+
+    try:
+        shutil.rmtree(utils_path)
+    except FileNotFoundError:
+        print(f"文件夹 {utils_path} 不存在.")
+    except PermissionError:
+        print(f"没有权限删除文件夹 {utils_path}.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"删除文件夹时发生错误: {e}")
         sys.exit(1)
