@@ -1,6 +1,4 @@
 import myxgenfile as mgf
-import os
-import sys
 
 
 
@@ -13,3 +11,5 @@ if __name__ == '__main__':
     mgf.rewritebat()
     mgf.finishedgen()
     print("[main]Done\n")
+    input("Press any key to exit...")
+

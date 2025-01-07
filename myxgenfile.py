@@ -8,7 +8,7 @@ def judge_pos():
     print("[mgf]checking sdk...\n")
     if not os.path.exists("./keil.bat"):
         print("Please put in project with keil.bat")
-        sys.exit(1)
+        errorhandle()
     prePath = ""
     try:
         with open('./keil.bat','r', encoding='utf-8') as k_file:
@@ -29,7 +29,7 @@ def judge_pos():
         for folder in folders_check:
             if not os.path.isdir(prePath+folder):
                 print(f"'{folder}' file not exit ")
-                sys.exit(1)
+                errorhandle()
             else:
                 continue
         return prePath
@@ -41,7 +41,7 @@ def createProj(pre_path):
     print("[mgf]Create new project...\n")
     if os.path.exists("./project"):
         print("Poject is already exist!")
-        sys.exit(1)
+        errorhandle()
     basefilelist = [
         "./inc",
         "./src",
@@ -138,7 +138,7 @@ def rewriteKeilconf(pre_path):
             file.write(st)
     except:
         print("can not open generate file in ./project/utils/keil_config.ini")
-        sys.exit(1)
+        errorhandle()
 
 
 def rewritebat():# this function change the keil.bat and ./utils/genbinary.bat
@@ -160,7 +160,7 @@ def rewritebat():# this function change the keil.bat and ./utils/genbinary.bat
             file.write(newcon)
     except:
         print("can not open generate file in ./project/keil.bat")
-        sys.exit(1)
+        errorhandle()
 
     print('[mgf]rewrite the new file "genbinary.bat"...\n')
     try:
@@ -173,31 +173,33 @@ def rewritebat():# this function change the keil.bat and ./utils/genbinary.bat
 
     except:
         print("can not open generate file in ./project/utils/genbinary.bat")
-        sys.exit(1)
+        errorhandle()
 
 def finishedgen():
     print("[mgf]generate the keil project...\n")
-    bat_path = './project/keil.bat'
+    bat_path = '.\\keil.bat'
+    utils_path = './utils/'
+    os.chdir("./project")
     try:
-        subprocess.run(f"runas /user:Administrator '{bat_path}'", shell=True, check=True)
+        subprocess.run([bat_path], shell=True, check=True)
         print(f"[mgf]{bat_path} done. project has been gen\n")
 
     except subprocess.CalledProcessError as e:
     # 运行失败时的处理
         print(f"文件 {bat_path} 运行失败,请手动点击./project/keil.bat生成工程，返回码: {e.returncode}")
-        sys.exit(1)
+        errorhandle()
     except FileNotFoundError:
         # 文件不存在时的处理
         print(f"文件 {bat_path} 不存在.")
-        sys.exit(1)
+        errorhandle()
     except PermissionError:
         # 没有权限运行文件时的处理
         print(f"没有权限运行文件 {bat_path},请手动点击./project/keil.bat生成工程.")
-        sys.exit(1)
+        errorhandle()
     except Exception as e:
         # 其他异常的处理
         print(f"运行文件时发生错误: {e},请手动点击./project/keil.bat生成工程")
-        sys.exit(1)
+        errorhandle()
 
     try:
         os.remove(bat_path)
@@ -205,20 +207,16 @@ def finishedgen():
         print(f"文件 {bat_path} 不存在.")
     except PermissionError:
         print(f"没有权限删除文件 {bat_path}.")
-        sys.exit(1)
+        errorhandle()
     except Exception as e:
         print(f"删除文件时发生错误: {e}")
-        sys.exit(1)
+        errorhandle()
 
-    utils_path = './project/utils/'
 
-    try:
-        shutil.rmtree(utils_path)
-    except FileNotFoundError:
-        print(f"文件夹 {utils_path} 不存在.")
-    except PermissionError:
-        print(f"没有权限删除文件夹 {utils_path}.")
-        sys.exit(1)
-    except Exception as e:
-        print(f"删除文件夹时发生错误: {e}")
-        sys.exit(1)
+
+
+
+def errorhandle():
+    print("some thing error..\n")
+    input("Press any key to exit...")
+    sys.exit(1)

@@ -26,6 +26,7 @@ suitable version: ASR6601_LoRaWAN 1.0.3 SDK
 
 2、直接复制Genhelper.exe程序到目标文件夹下，放在keil.bat文件一起，双击运行.
 
+3、一般情况下需要你手动启动``./project/keil.bat``生成工程
 >如果你有环境，可以直接把main.py和myxgenfile.py复制到文件夹下，打开bash窗口用
 > 
 > ```
