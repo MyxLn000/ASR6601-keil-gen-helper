@@ -51,7 +51,9 @@ def createProj(pre_path):
     usedforincs = [
         "drivers",
         "lora",
-        "platform"
+        "platform",
+        "tools"
+        ""
     ]
     for file in basefilelist:
         shutil.copytree(file,"./project/"+file)
@@ -141,11 +143,11 @@ def rewriteKeilconf(pre_path):
         errorhandle()
 
 
-def rewritebat():# this function change the keil.bat and ./utils/genbinary.bat
+def rewritebat(pre_path):# this function change the keil.bat and ./utils/genbinary.bat
     print('[mgf]rewrite the new file "keil.bat"...\n')
     keil_bat_path = './project/keil.bat'
     genbinary_path = './project/utils/genbinary.bat'
-    # pre_path = pre_path[:-2]
+    pre_path = pre_path[:-2]
     try:
         with open(keil_bat_path,encoding='utf-8') as keil:
             cont = keil.read()
@@ -166,7 +168,8 @@ def rewritebat():# this function change the keil.bat and ./utils/genbinary.bat
     try:
         with open(genbinary_path, encoding='utf-8') as genbin:
             cont = genbin.read()
-        cont = '..\\' +cont
+        a = len(pre_path)
+        cont = '.\\'+cont[a:]
 
         with open(genbinary_path, 'w') as file:
             file.write(cont)
